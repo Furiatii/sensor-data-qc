@@ -21,7 +21,6 @@ st.set_page_config(
 # ── Custom CSS ──────────────────────────────────────────────
 st.markdown("""
 <style>
-    /* Header */
     .app-header {
         background: linear-gradient(135deg, #0F172A 0%, #0369A1 100%);
         padding: 2.5rem 2rem;
@@ -29,72 +28,31 @@ st.markdown("""
         margin-bottom: 1.5rem;
         color: white;
     }
-    .app-header h1 {
-        margin: 0;
-        font-size: 2rem;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-    }
-    .app-header p {
-        margin: 0.5rem 0 0 0;
-        opacity: 0.85;
-        font-size: 1.05rem;
-    }
+    .app-header h1 { margin: 0; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+    .app-header p { margin: 0.5rem 0 0 0; opacity: 0.85; font-size: 1.05rem; }
 
-    /* Metric cards */
-    .metric-row {
-        display: flex;
-        gap: 1rem;
-        margin: 1rem 0;
-        flex-wrap: wrap;
-    }
+    .metric-row { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
     .metric-card {
-        flex: 1;
-        min-width: 140px;
-        background: white;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 1.2rem;
-        text-align: center;
-        transition: box-shadow 0.2s;
+        flex: 1; min-width: 140px; background: white; border: 1px solid #E2E8F0;
+        border-radius: 10px; padding: 1.2rem; text-align: center; transition: box-shadow 0.2s;
     }
-    .metric-card:hover {
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-    }
+    .metric-card:hover { box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08); }
     .metric-card .label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #64748B;
-        margin-bottom: 0.3rem;
+        font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+        color: #64748B; margin-bottom: 0.3rem;
     }
-    .metric-card .value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #0F172A;
-    }
+    .metric-card .value { font-size: 1.5rem; font-weight: 700; color: #0F172A; }
     .metric-card .value.accent { color: #0369A1; }
     .metric-card .value.warning { color: #D97706; }
     .metric-card .value.danger { color: #DC2626; }
     .metric-card .value.success { color: #059669; }
 
-    /* Issue badges */
     .issue-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.35rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        margin: 0.25rem;
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem;
+        font-weight: 600; margin: 0.25rem;
     }
-    .issue-badge .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        display: inline-block;
-    }
+    .issue-badge .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
     .badge-nan { background: #FEF2F2; color: #DC2626; }
     .badge-nan .dot { background: #DC2626; }
     .badge-outlier { background: #F5F3FF; color: #7C3AED; }
@@ -104,114 +62,70 @@ st.markdown("""
     .badge-gap { background: #FFFBEB; color: #D97706; }
     .badge-gap .dot { background: #D97706; }
 
-    /* Section headers */
     .section-header {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        margin: 2rem 0 1rem 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #E2E8F0;
+        display: flex; align-items: center; gap: 0.6rem;
+        margin: 2rem 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid #E2E8F0;
     }
     .section-header .icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        flex-shrink: 0;
+        width: 32px; height: 32px; border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1rem; flex-shrink: 0;
     }
-    .section-header h2 {
-        margin: 0;
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #0F172A;
-    }
+    .section-header h2 { margin: 0; font-size: 1.3rem; font-weight: 700; color: #0F172A; }
     .icon-blue { background: #DBEAFE; }
-    .icon-amber { background: #FEF3C7; }
     .icon-green { background: #D1FAE5; }
     .icon-purple { background: #EDE9FE; }
     .icon-red { background: #FEE2E2; }
 
-    /* Comparison legend */
+    .context-box {
+        background: #F8FAFC; border-left: 3px solid #0369A1;
+        padding: 0.8rem 1rem; margin: 0.5rem 0 1rem 0;
+        border-radius: 0 8px 8px 0; color: #475569; font-size: 0.9rem; line-height: 1.5;
+    }
+
+    .how-it-works {
+        display: flex; gap: 1.5rem; margin: 1.5rem 0; flex-wrap: wrap;
+    }
+    .step-card {
+        flex: 1; min-width: 200px; background: white; border: 1px solid #E2E8F0;
+        border-radius: 10px; padding: 1.2rem; text-align: center;
+    }
+    .step-card .step-num {
+        width: 28px; height: 28px; background: #0369A1; color: white;
+        border-radius: 50%; display: inline-flex; align-items: center;
+        justify-content: center; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;
+    }
+    .step-card .step-title { font-weight: 700; color: #0F172A; margin-bottom: 0.3rem; }
+    .step-card .step-desc { font-size: 0.8rem; color: #64748B; }
+
     .legend-row {
-        display: flex;
-        gap: 1.5rem;
-        margin: 0.5rem 0 0.5rem 0;
-        font-size: 0.9rem;
-        color: #64748B;
+        display: flex; gap: 1.5rem; margin: 0.5rem 0 0.5rem 0;
+        font-size: 0.9rem; color: #64748B;
     }
-    .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-    }
-    .legend-line {
-        width: 24px;
-        height: 3px;
-        border-radius: 2px;
-    }
+    .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+    .legend-line { width: 24px; height: 3px; border-radius: 2px; }
 
-    /* Footer */
     .app-footer {
-        text-align: center;
-        padding: 1.5rem 0;
-        margin-top: 2rem;
-        border-top: 1px solid #E2E8F0;
-        color: #94A3B8;
-        font-size: 0.85rem;
+        text-align: center; padding: 1.5rem 0; margin-top: 2rem;
+        border-top: 1px solid #E2E8F0; color: #94A3B8; font-size: 0.85rem;
     }
-    .app-footer a {
-        color: #0369A1;
-        text-decoration: none;
-        font-weight: 500;
-    }
+    .app-footer a { color: #0369A1; text-decoration: none; font-weight: 500; }
 
-    /* Sidebar styling */
-    section[data-testid="stSidebar"] > div {
-        padding-top: 1.5rem;
-    }
-    .sidebar-section {
-        background: white;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
     .sidebar-title {
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #64748B;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
+        font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em;
+        color: #64748B; font-weight: 600; margin-bottom: 0.5rem;
     }
 
-    /* Upload area */
-    .upload-area {
-        display: flex;
-        gap: 1rem;
-        align-items: stretch;
-    }
-
-    /* Hide default streamlit header spacing */
     .block-container { padding-top: 1rem; }
 
-    /* Tabs */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 0.5rem;
-    }
+    .stTabs [data-baseweb="tab-list"] { gap: 0.5rem; }
     .stTabs [data-baseweb="tab"] {
-        border-radius: 8px 8px 0 0;
-        padding: 0.5rem 1rem;
-        font-weight: 600;
+        border-radius: 8px 8px 0 0; padding: 0.5rem 1rem; font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# ── Plotly theme ────────────────────────────────────────────
+# ── Plotly defaults ─────────────────────────────────────────
 PLOTLY_LAYOUT = dict(
     font=dict(family="Plus Jakarta Sans, -apple-system, sans-serif", color="#0F172A"),
     plot_bgcolor="white",
@@ -241,26 +155,89 @@ ISSUE_COLORS = {
 st.markdown("""
 <div class="app-header">
     <h1>Sensor Data QC Tool</h1>
-    <p>Upload a time series CSV, detect anomalies, clean the data, and export results.</p>
+    <p>Automated quality control for time series sensor data</p>
+</div>
+""", unsafe_allow_html=True)
+
+# ── "What is this" intro ────────────────────────────────────
+st.markdown("""
+<div class="context-box">
+    <strong>The problem:</strong> sensors in the field (hydrological stations, industrial equipment, environmental monitors)
+    produce data with gaps, spikes, and gradual drift. Catching these issues manually takes hours
+    and is error-prone. This tool automates the entire QC pipeline: upload raw data, detect anomalies,
+    clean them, and export corrected results.
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="how-it-works">
+    <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-title">Upload</div>
+        <div class="step-desc">Load a sensor CSV or use the included sample dataset</div>
+    </div>
+    <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-title">Detect</div>
+        <div class="step-desc">Automatically find missing data, outliers, and sensor drift</div>
+    </div>
+    <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-title">Clean</div>
+        <div class="step-desc">Interpolate gaps and replace bad readings with configurable methods</div>
+    </div>
+    <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-title">Export</div>
+        <div class="step-desc">Download the corrected CSV and a QC report documenting every change</div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
 # ── Sidebar ─────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("### Settings")
+    st.markdown(
+        '<div style="font-size:0.85rem; color:#64748B; margin-bottom:1rem">'
+        'Adjust detection sensitivity and cleaning behavior. '
+        'Changes update the results in real time.</div>',
+        unsafe_allow_html=True,
+    )
 
     st.markdown('<div class="sidebar-title">Detection</div>', unsafe_allow_html=True)
     outlier_method = st.selectbox("Outlier method", ["Z-Score", "IQR", "Both"], label_visibility="collapsed")
-    zscore_threshold = st.slider("Z-Score threshold", 1.0, 5.0, 3.0, 0.1)
-    iqr_factor = st.slider("IQR factor", 1.0, 3.0, 1.5, 0.1)
-    drift_window = st.slider("Drift window (points)", 10, 200, 50, 5)
-    drift_threshold = st.slider("Drift threshold (sigma)", 0.5, 5.0, 2.0, 0.1)
+    zscore_threshold = st.slider(
+        "Z-Score threshold", 1.0, 5.0, 3.0, 0.1,
+        help="How many standard deviations from the mean counts as an outlier. Lower = more sensitive.",
+    )
+    iqr_factor = st.slider(
+        "IQR factor", 1.0, 3.0, 1.5, 0.1,
+        help="Multiplier for the interquartile range. Lower = catches more outliers.",
+    )
+    drift_window = st.slider(
+        "Drift window (points)", 10, 200, 50, 5,
+        help="Size of the rolling window used to detect gradual sensor drift.",
+    )
+    drift_threshold = st.slider(
+        "Drift threshold (sigma)", 0.5, 5.0, 2.0, 0.1,
+        help="How far the rolling mean can deviate from the global mean before flagging drift.",
+    )
 
     st.markdown("---")
     st.markdown('<div class="sidebar-title">Cleaning</div>', unsafe_allow_html=True)
-    outlier_action = st.selectbox("Outlier handling", ["Replace with rolling mean", "Remove (set NaN)"], label_visibility="collapsed")
-    rolling_window = st.slider("Rolling window", 3, 50, 10, 1)
-    interpolate_max_gap = st.slider("Max gap to interpolate", 1, 20, 5, 1)
+    outlier_action = st.selectbox(
+        "Outlier handling",
+        ["Replace with rolling mean", "Remove (set NaN)"],
+        label_visibility="collapsed",
+    )
+    rolling_window = st.slider(
+        "Rolling window", 3, 50, 10, 1,
+        help="Window size for calculating the rolling mean used to replace outliers.",
+    )
+    interpolate_max_gap = st.slider(
+        "Max gap to interpolate", 1, 20, 5, 1,
+        help="Largest consecutive gap (in data points) that will be filled by interpolation.",
+    )
 
 # ── Data Input ──────────────────────────────────────────────
 st.markdown("""
@@ -276,14 +253,17 @@ with col_upload:
     uploaded_file = st.file_uploader("Upload CSV", type=["csv"], label_visibility="collapsed")
 
 with col_or:
-    st.markdown("<div style='text-align:center; padding-top:0.5rem; color:#94A3B8; font-weight:600'>or</div>", unsafe_allow_html=True)
+    st.markdown(
+        "<div style='text-align:center; padding-top:0.5rem; color:#94A3B8; font-weight:600'>or</div>",
+        unsafe_allow_html=True,
+    )
 
 with col_sample:
     sample_path = os.path.join(os.path.dirname(__file__), "data", "sample_sensor_data.csv")
     use_sample = st.button("Load sample data", type="primary", use_container_width=True)
 
+# Auto-load sample data on first visit so the app is never empty
 df = None
-
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     st.session_state["df"] = df
@@ -292,18 +272,17 @@ elif use_sample and os.path.exists(sample_path):
     df = pd.read_csv(sample_path)
     st.session_state["df"] = df
     st.session_state["data_source"] = "sample_sensor_data.csv"
+elif "df" not in st.session_state and os.path.exists(sample_path):
+    # First visit: auto-load sample so the recruiter sees results immediately
+    df = pd.read_csv(sample_path)
+    st.session_state["df"] = df
+    st.session_state["data_source"] = "sample_sensor_data.csv (auto-loaded)"
 
 if df is None and "df" in st.session_state:
     df = st.session_state["df"]
 
 if df is None:
-    st.markdown("""
-    <div style="text-align:center; padding:3rem 1rem; color:#94A3B8">
-        <p style="font-size:2.5rem; margin-bottom:0.5rem">📊</p>
-        <p style="font-size:1.1rem; font-weight:600; color:#64748B">No data loaded</p>
-        <p>Upload a CSV file or click <strong>Load sample data</strong> to get started.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.info("Upload a CSV file or click **Load sample data** to get started.")
     st.stop()
 
 # ── Auto-detect columns ────────────────────────────────────
@@ -341,7 +320,6 @@ total_points = len(df)
 time_range = df[timestamp_col].iloc[-1] - df[timestamp_col].iloc[0]
 total_nan = sum(df[c].isna().sum() for c in value_cols)
 nan_pct = total_nan / (total_points * len(value_cols)) * 100
-
 source_name = st.session_state.get("data_source", "unknown")
 
 st.markdown(f"""
@@ -369,66 +347,10 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ── Tabs for main content ──────────────────────────────────
+# ── Tabs ────────────────────────────────────────────────────
 tab_overview, tab_detect, tab_clean, tab_export = st.tabs([
-    "Overview", "Detection", "Before vs After", "Export"
+    "📈 Raw Data", "🔍 Detection", "✨ Before vs After", "📦 Export"
 ])
-
-# ── TAB 1: Overview ────────────────────────────────────────
-with tab_overview:
-    st.markdown("""
-    <div class="section-header">
-        <div class="icon icon-blue">📈</div>
-        <h2>Raw Data</h2>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Stats table
-    stats_data = {}
-    for col in value_cols:
-        series = df[col]
-        nan_count = series.isna().sum()
-        nan_pct_col = nan_count / len(series) * 100
-        stats_data[col] = {
-            "Min": f"{series.min():.3f}" if pd.notna(series.min()) else "N/A",
-            "Max": f"{series.max():.3f}" if pd.notna(series.max()) else "N/A",
-            "Mean": f"{series.mean():.3f}" if pd.notna(series.mean()) else "N/A",
-            "Std": f"{series.std():.3f}" if pd.notna(series.std()) else "N/A",
-            "NaN": f"{nan_count} ({nan_pct_col:.1f}%)",
-        }
-    st.dataframe(pd.DataFrame(stats_data).T, use_container_width=True)
-
-    # Raw time series chart
-    fig_raw = make_subplots(
-        rows=len(value_cols), cols=1, shared_xaxes=True,
-        vertical_spacing=0.06,
-        subplot_titles=[f"  {c}" for c in value_cols],
-    )
-    for i, col in enumerate(value_cols):
-        fig_raw.add_trace(
-            go.Scatter(
-                x=df[timestamp_col], y=df[col],
-                mode="lines", name=col,
-                line=dict(color=COLORS[i % len(COLORS)], width=1.5),
-                hovertemplate="%{x|%Y-%m-%d %H:%M}<br>%{y:.3f}<extra></extra>",
-            ),
-            row=i + 1, col=1,
-        )
-        fig_raw.update_yaxes(
-            title_text=col, row=i + 1, col=1,
-            gridcolor="#F1F5F9", linecolor="#E2E8F0",
-            title_font=dict(size=11),
-        )
-        fig_raw.update_xaxes(gridcolor="#F1F5F9", linecolor="#E2E8F0", row=i + 1, col=1)
-    fig_raw.update_layout(
-        height=220 * len(value_cols),
-        showlegend=False,
-        **{k: v for k, v in PLOTLY_LAYOUT.items() if k not in ("xaxis", "yaxis", "legend")},
-    )
-    for ann in fig_raw["layout"]["annotations"]:
-        ann["font"] = dict(size=12, color="#64748B")
-        ann["xanchor"] = "left"
-    st.plotly_chart(fig_raw, use_container_width=True)
 
 # ── Run detection & cleaning (shared across tabs) ──────────
 issues = run_all_detections(
@@ -450,12 +372,68 @@ df_clean = clean_series(
     interpolate_max_gap=interpolate_max_gap,
 )
 
+# ── TAB 1: Raw Data ───────────────────────────────────────
+with tab_overview:
+    st.markdown("""
+    <div class="context-box">
+        This is the raw sensor data as received. Notice the <strong>spikes</strong> (sudden jumps),
+        <strong>gaps</strong> (missing segments), and the gradual <strong>drift</strong> in the temperature
+        channel around data point 600. These are common issues in real sensor deployments.
+    </div>
+    """, unsafe_allow_html=True)
+
+    stats_data = {}
+    for col in value_cols:
+        series = df[col]
+        nan_count = series.isna().sum()
+        nan_pct_col = nan_count / len(series) * 100
+        stats_data[col] = {
+            "Min": f"{series.min():.3f}" if pd.notna(series.min()) else "N/A",
+            "Max": f"{series.max():.3f}" if pd.notna(series.max()) else "N/A",
+            "Mean": f"{series.mean():.3f}" if pd.notna(series.mean()) else "N/A",
+            "Std": f"{series.std():.3f}" if pd.notna(series.std()) else "N/A",
+            "NaN": f"{nan_count} ({nan_pct_col:.1f}%)",
+        }
+    st.dataframe(pd.DataFrame(stats_data).T, use_container_width=True)
+
+    fig_raw = make_subplots(
+        rows=len(value_cols), cols=1, shared_xaxes=True,
+        vertical_spacing=0.06,
+        subplot_titles=[f"  {c}" for c in value_cols],
+    )
+    for i, col in enumerate(value_cols):
+        fig_raw.add_trace(
+            go.Scatter(
+                x=df[timestamp_col], y=df[col],
+                mode="lines", name=col,
+                line=dict(color=COLORS[i % len(COLORS)], width=1.5),
+                hovertemplate="%{x|%Y-%m-%d %H:%M}<br>%{y:.3f}<extra></extra>",
+            ),
+            row=i + 1, col=1,
+        )
+        fig_raw.update_yaxes(
+            title_text=col, row=i + 1, col=1,
+            gridcolor="#F1F5F9", linecolor="#E2E8F0", title_font=dict(size=11),
+        )
+        fig_raw.update_xaxes(gridcolor="#F1F5F9", linecolor="#E2E8F0", row=i + 1, col=1)
+    fig_raw.update_layout(
+        height=220 * len(value_cols), showlegend=False,
+        **{k: v for k, v in PLOTLY_LAYOUT.items() if k not in ("xaxis", "yaxis", "legend")},
+    )
+    for ann in fig_raw["layout"]["annotations"]:
+        ann["font"] = dict(size=12, color="#64748B")
+        ann["xanchor"] = "left"
+    st.plotly_chart(fig_raw, use_container_width=True)
+
 # ── TAB 2: Detection ──────────────────────────────────────
 with tab_detect:
     st.markdown("""
-    <div class="section-header">
-        <div class="icon icon-red">🔍</div>
-        <h2>Issue Detection</h2>
+    <div class="context-box">
+        The tool scans every data point using statistical methods. <strong>Missing values</strong> (NaN) are
+        identified directly. <strong>Outliers</strong> are flagged when a reading deviates too far from the
+        norm (configurable via the sidebar). <strong>Drift</strong> detects when a sensor gradually shifts
+        away from its expected baseline. The colored markers on the charts below show exactly where each
+        issue was found.
     </div>
     """, unsafe_allow_html=True)
 
@@ -467,7 +445,6 @@ with tab_detect:
         </div>
         """, unsafe_allow_html=True)
     else:
-        # Issue summary badges
         issue_counts = issues["issue_type"].value_counts()
         badge_map = {
             "Missing Value (NaN)": "badge-nan",
@@ -484,17 +461,16 @@ with tab_detect:
         st.markdown(f"""
         <div class="metric-row">
             <div class="metric-card" style="flex:0 0 auto">
-                <div class="label">Total issues</div>
+                <div class="label">Total issues found</div>
                 <div class="value danger">{len(issues)}</div>
             </div>
             <div class="metric-card" style="flex:3; text-align:left">
-                <div class="label">Breakdown</div>
+                <div class="label">Breakdown by type</div>
                 <div style="margin-top:0.3rem">{badges_html}</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        # Issues chart
         fig_issues = make_subplots(
             rows=len(value_cols), cols=1, shared_xaxes=True,
             vertical_spacing=0.06,
@@ -506,8 +482,7 @@ with tab_detect:
                     x=df[timestamp_col], y=df[col],
                     mode="lines", name=col,
                     line=dict(color=COLORS[i % len(COLORS)], width=1.2),
-                    opacity=0.5,
-                    showlegend=False,
+                    opacity=0.5, showlegend=False,
                     hovertemplate="%{x|%Y-%m-%d %H:%M}<br>%{y:.3f}<extra></extra>",
                 ),
                 row=i + 1, col=1,
@@ -537,8 +512,7 @@ with tab_detect:
                 )
             fig_issues.update_yaxes(
                 title_text=col, row=i + 1, col=1,
-                gridcolor="#F1F5F9", linecolor="#E2E8F0",
-                title_font=dict(size=11),
+                gridcolor="#F1F5F9", linecolor="#E2E8F0", title_font=dict(size=11),
             )
             fig_issues.update_xaxes(gridcolor="#F1F5F9", linecolor="#E2E8F0", row=i + 1, col=1)
 
@@ -551,25 +525,17 @@ with tab_detect:
             ann["xanchor"] = "left"
         st.plotly_chart(fig_issues, use_container_width=True)
 
-        # Issues table
-        with st.expander("View all issues", expanded=False):
-            st.dataframe(
-                issues.style.apply(
-                    lambda row: [
-                        f"color: {ISSUE_COLORS.get(row['issue_type'], '#0F172A')}"
-                    ] * len(row),
-                    axis=1,
-                ),
-                use_container_width=True,
-                height=400,
-            )
+        with st.expander("View all issues as table"):
+            st.dataframe(issues, use_container_width=True, height=400)
 
 # ── TAB 3: Before vs After ────────────────────────────────
 with tab_clean:
     st.markdown("""
-    <div class="section-header">
-        <div class="icon icon-green">✨</div>
-        <h2>Before vs After</h2>
+    <div class="context-box">
+        Gray = original data with problems. Blue = cleaned data. The spikes are gone (replaced by
+        the local average), the gaps are filled (linear interpolation), and the signal is now ready
+        for analysis or reporting. You can adjust the cleaning sensitivity in the sidebar and see the
+        results update in real time.
     </div>
     """, unsafe_allow_html=True)
 
@@ -577,7 +543,7 @@ with tab_clean:
     <div class="legend-row">
         <div class="legend-item">
             <div class="legend-line" style="background:#CBD5E1"></div>
-            <span>Raw data</span>
+            <span>Raw data (with problems)</span>
         </div>
         <div class="legend-item">
             <div class="legend-line" style="background:#0369A1"></div>
@@ -614,14 +580,12 @@ with tab_clean:
         )
         fig_compare.update_yaxes(
             title_text=col, row=i + 1, col=1,
-            gridcolor="#F1F5F9", linecolor="#E2E8F0",
-            title_font=dict(size=11),
+            gridcolor="#F1F5F9", linecolor="#E2E8F0", title_font=dict(size=11),
         )
         fig_compare.update_xaxes(gridcolor="#F1F5F9", linecolor="#E2E8F0", row=i + 1, col=1)
 
     fig_compare.update_layout(
-        height=230 * len(value_cols),
-        showlegend=False,
+        height=230 * len(value_cols), showlegend=False,
         **{k: v for k, v in PLOTLY_LAYOUT.items() if k not in ("xaxis", "yaxis", "legend")},
     )
     for ann in fig_compare["layout"]["annotations"]:
@@ -629,24 +593,23 @@ with tab_clean:
         ann["xanchor"] = "left"
     st.plotly_chart(fig_compare, use_container_width=True)
 
-    # Cleaning summary metrics
-    st.markdown("#### Cleaning Summary")
+    # Cleaning summary
+    st.markdown("#### What changed")
     summary_cols = st.columns(len(value_cols))
     for i, col in enumerate(value_cols):
         raw_nan = df[col].isna().sum()
         clean_nan = df_clean[col].isna().sum()
         recovered = raw_nan - clean_nan
         changed = (df[col].fillna(-9999) != df_clean[col].fillna(-9999)).sum()
-        pct_recovered = (recovered / raw_nan * 100) if raw_nan > 0 else 0
 
         with summary_cols[i]:
             st.markdown(f"""
             <div class="metric-card">
                 <div class="label">{col}</div>
                 <div style="margin-top:0.5rem">
-                    <div style="font-size:0.8rem; color:#64748B">NaN: {raw_nan} → {clean_nan}</div>
+                    <div style="font-size:0.8rem; color:#64748B">Missing: {raw_nan} → {clean_nan}</div>
                     <div style="font-size:1.3rem; font-weight:700; color:#059669">{recovered} recovered</div>
-                    <div style="font-size:0.8rem; color:#64748B">{changed} points modified</div>
+                    <div style="font-size:0.8rem; color:#64748B">{changed} points modified total</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -654,9 +617,10 @@ with tab_clean:
 # ── TAB 4: Export ──────────────────────────────────────────
 with tab_export:
     st.markdown("""
-    <div class="section-header">
-        <div class="icon icon-purple">📦</div>
-        <h2>Export Results</h2>
+    <div class="context-box">
+        Download the cleaned dataset as CSV (ready for analysis in Excel, Python, R, or any BI tool)
+        and/or the QC report that documents every correction made, with the parameters used.
+        The report provides full traceability of what was changed and why.
     </div>
     """, unsafe_allow_html=True)
 
@@ -667,7 +631,7 @@ with tab_export:
         <div class="metric-card" style="margin-bottom:1rem">
             <div class="label">Cleaned Dataset</div>
             <div style="font-size:0.9rem; color:#64748B; margin-top:0.3rem">
-                CSV with all corrections applied
+                CSV with all corrections applied, ready for analysis
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -685,7 +649,7 @@ with tab_export:
         <div class="metric-card" style="margin-bottom:1rem">
             <div class="label">QC Report</div>
             <div style="font-size:0.9rem; color:#64748B; margin-top:0.3rem">
-                Summary of all detections and corrections
+                Full traceability: what was found, what was changed, parameters used
             </div>
         </div>
         """, unsafe_allow_html=True)
