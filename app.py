@@ -155,17 +155,17 @@ ISSUE_COLORS = {
 st.markdown("""
 <div class="app-header">
     <h1>Sensor Data QC Tool</h1>
-    <p>Automated quality control for time series sensor data</p>
+    <p>Controle de qualidade automatizado para séries temporais de sensores</p>
 </div>
 """, unsafe_allow_html=True)
 
 # ── "What is this" intro ────────────────────────────────────
 st.markdown("""
 <div class="context-box">
-    <strong>The problem:</strong> sensors in the field (hydrological stations, industrial equipment, environmental monitors)
-    produce data with gaps, spikes, and gradual drift. Catching these issues manually takes hours
-    and is error-prone. This tool automates the entire QC pipeline: upload raw data, detect anomalies,
-    clean them, and export corrected results.
+    <strong>O problema:</strong> sensores em campo (estações hidrológicas, equipamentos industriais, monitores ambientais)
+    produzem dados com falhas, picos espúrios e deriva gradual. Identificar esses problemas manualmente
+    leva horas e é sujeito a erros. Esta ferramenta automatiza todo o pipeline de QC: carregar dados brutos,
+    detectar anomalias, corrigir e exportar os resultados.
 </div>
 """, unsafe_allow_html=True)
 
@@ -173,94 +173,96 @@ st.markdown("""
 <div class="how-it-works">
     <div class="step-card">
         <div class="step-num">1</div>
-        <div class="step-title">Upload</div>
-        <div class="step-desc">Load a sensor CSV or use the included sample dataset</div>
+        <div class="step-title">Carregar</div>
+        <div class="step-desc">Importe um CSV de sensor ou use o dataset de exemplo incluído</div>
     </div>
     <div class="step-card">
         <div class="step-num">2</div>
-        <div class="step-title">Detect</div>
-        <div class="step-desc">Automatically find missing data, outliers, and sensor drift</div>
+        <div class="step-title">Detectar</div>
+        <div class="step-desc">Encontra automaticamente falhas, outliers e deriva nos dados</div>
     </div>
     <div class="step-card">
         <div class="step-num">3</div>
-        <div class="step-title">Clean</div>
-        <div class="step-desc">Interpolate gaps and replace bad readings with configurable methods</div>
+        <div class="step-title">Limpar</div>
+        <div class="step-desc">Interpola gaps e substitui leituras ruins com métodos configuráveis</div>
     </div>
     <div class="step-card">
         <div class="step-num">4</div>
-        <div class="step-title">Export</div>
-        <div class="step-desc">Download the corrected CSV and a QC report documenting every change</div>
+        <div class="step-title">Exportar</div>
+        <div class="step-desc">Baixe o CSV corrigido e um relatório de QC documentando cada alteração</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 # ── Sidebar ─────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### Settings")
+    st.markdown("### Configurações")
     st.markdown(
         '<div style="font-size:0.85rem; color:#64748B; margin-bottom:1rem">'
-        'Adjust detection sensitivity and cleaning behavior. '
-        'Changes update the results in real time.</div>',
+        'Ajuste a sensibilidade da detecção e o comportamento da limpeza. '
+        'As alterações atualizam os resultados em tempo real.</div>',
         unsafe_allow_html=True,
     )
 
-    st.markdown('<div class="sidebar-title">Detection</div>', unsafe_allow_html=True)
-    outlier_method = st.selectbox("Outlier method", ["Z-Score", "IQR", "Both"], label_visibility="collapsed")
+    st.markdown('<div class="sidebar-title">Detecção</div>', unsafe_allow_html=True)
+    outlier_method_label = st.selectbox("Método de outlier", ["Z-Score", "IQR", "Ambos"], label_visibility="collapsed")
+    outlier_method = {"Z-Score": "Z-Score", "IQR": "IQR", "Ambos": "Both"}[outlier_method_label]
     zscore_threshold = st.slider(
-        "Z-Score threshold", 1.0, 5.0, 3.0, 0.1,
-        help="How many standard deviations from the mean counts as an outlier. Lower = more sensitive.",
+        "Limiar Z-Score", 1.0, 5.0, 3.0, 0.1,
+        help="Quantos desvios-padrão da média contam como outlier. Menor = mais sensível.",
     )
     iqr_factor = st.slider(
-        "IQR factor", 1.0, 3.0, 1.5, 0.1,
-        help="Multiplier for the interquartile range. Lower = catches more outliers.",
+        "Fator IQR", 1.0, 3.0, 1.5, 0.1,
+        help="Multiplicador do intervalo interquartil. Menor = detecta mais outliers.",
     )
     drift_window = st.slider(
-        "Drift window (points)", 10, 200, 50, 5,
-        help="Size of the rolling window used to detect gradual sensor drift.",
+        "Janela de deriva (pontos)", 10, 200, 50, 5,
+        help="Tamanho da janela móvel usada para detectar deriva gradual do sensor.",
     )
     drift_threshold = st.slider(
-        "Drift threshold (sigma)", 0.5, 5.0, 2.0, 0.1,
-        help="How far the rolling mean can deviate from the global mean before flagging drift.",
+        "Limiar de deriva (sigma)", 0.5, 5.0, 2.0, 0.1,
+        help="Quanto a média móvel pode desviar da média global antes de sinalizar deriva.",
     )
 
     st.markdown("---")
-    st.markdown('<div class="sidebar-title">Cleaning</div>', unsafe_allow_html=True)
-    outlier_action = st.selectbox(
-        "Outlier handling",
-        ["Replace with rolling mean", "Remove (set NaN)"],
+    st.markdown('<div class="sidebar-title">Limpeza</div>', unsafe_allow_html=True)
+    outlier_action_label = st.selectbox(
+        "Tratamento de outliers",
+        ["Substituir pela média móvel", "Remover (definir NaN)"],
         label_visibility="collapsed",
     )
+    outlier_action = {"Substituir pela média móvel": "Replace with rolling mean", "Remover (definir NaN)": "Remove (set NaN)"}[outlier_action_label]
     rolling_window = st.slider(
-        "Rolling window", 3, 50, 10, 1,
-        help="Window size for calculating the rolling mean used to replace outliers.",
+        "Janela da média móvel", 3, 50, 10, 1,
+        help="Tamanho da janela para calcular a média móvel usada na substituição de outliers.",
     )
     interpolate_max_gap = st.slider(
-        "Max gap to interpolate", 1, 20, 5, 1,
-        help="Largest consecutive gap (in data points) that will be filled by interpolation.",
+        "Gap máximo para interpolar", 1, 20, 5, 1,
+        help="Maior gap consecutivo (em pontos) que será preenchido por interpolação.",
     )
 
 # ── Data Input ──────────────────────────────────────────────
 st.markdown("""
 <div class="section-header">
     <div class="icon icon-blue">📁</div>
-    <h2>Data Input</h2>
+    <h2>Entrada de Dados</h2>
 </div>
 """, unsafe_allow_html=True)
 
 col_upload, col_or, col_sample = st.columns([5, 1, 2])
 
 with col_upload:
-    uploaded_file = st.file_uploader("Upload CSV", type=["csv"], label_visibility="collapsed")
+    uploaded_file = st.file_uploader("Enviar CSV", type=["csv"], label_visibility="collapsed")
 
 with col_or:
     st.markdown(
-        "<div style='text-align:center; padding-top:0.5rem; color:#94A3B8; font-weight:600'>or</div>",
+        "<div style='text-align:center; padding-top:0.5rem; color:#94A3B8; font-weight:600'>ou</div>",
         unsafe_allow_html=True,
     )
 
 with col_sample:
     sample_path = os.path.join(os.path.dirname(__file__), "data", "sample_sensor_data.csv")
-    use_sample = st.button("Load sample data", type="primary", use_container_width=True)
+    use_sample = st.button("Usar dados de exemplo", type="primary", use_container_width=True)
 
 # Auto-load sample data on first visit so the app is never empty
 df = None
@@ -282,7 +284,7 @@ if df is None and "df" in st.session_state:
     df = st.session_state["df"]
 
 if df is None:
-    st.info("Upload a CSV file or click **Load sample data** to get started.")
+    st.info("Envie um arquivo CSV ou clique em **Usar dados de exemplo** para começar.")
     st.stop()
 
 # ── Auto-detect columns ────────────────────────────────────
@@ -297,20 +299,20 @@ for c in df.columns:
 numeric_cols = df.select_dtypes(include="number").columns.tolist()
 
 if not datetime_cols:
-    st.error("No datetime column detected. Ensure your CSV has a timestamp column.")
+    st.error("Nenhuma coluna de data/hora detectada. Verifique se o CSV possui uma coluna de timestamp.")
     st.stop()
 if not numeric_cols:
-    st.error("No numeric columns detected.")
+    st.error("Nenhuma coluna numérica detectada.")
     st.stop()
 
 col_ts, col_vals = st.columns([1, 2])
 with col_ts:
-    timestamp_col = st.selectbox("Timestamp column", datetime_cols, index=0)
+    timestamp_col = st.selectbox("Coluna de timestamp", datetime_cols, index=0)
 with col_vals:
-    value_cols = st.multiselect("Value columns", numeric_cols, default=numeric_cols)
+    value_cols = st.multiselect("Colunas de valores", numeric_cols, default=numeric_cols)
 
 if not value_cols:
-    st.warning("Select at least one value column.")
+    st.warning("Selecione pelo menos uma coluna de valores.")
     st.stop()
 
 df[timestamp_col] = pd.to_datetime(df[timestamp_col])
@@ -325,23 +327,23 @@ source_name = st.session_state.get("data_source", "unknown")
 st.markdown(f"""
 <div class="metric-row">
     <div class="metric-card">
-        <div class="label">Source</div>
+        <div class="label">Fonte</div>
         <div class="value" style="font-size:0.95rem">{source_name}</div>
     </div>
     <div class="metric-card">
-        <div class="label">Records</div>
+        <div class="label">Registros</div>
         <div class="value accent">{total_points:,}</div>
     </div>
     <div class="metric-card">
-        <div class="label">Time span</div>
+        <div class="label">Período</div>
         <div class="value" style="font-size:1rem">{time_range.days}d {time_range.seconds//3600}h</div>
     </div>
     <div class="metric-card">
-        <div class="label">Channels</div>
+        <div class="label">Canais</div>
         <div class="value accent">{len(value_cols)}</div>
     </div>
     <div class="metric-card">
-        <div class="label">Missing values</div>
+        <div class="label">Valores faltantes</div>
         <div class="value {"danger" if nan_pct > 5 else "warning" if nan_pct > 1 else "success"}">{total_nan} ({nan_pct:.1f}%)</div>
     </div>
 </div>
@@ -349,7 +351,7 @@ st.markdown(f"""
 
 # ── Tabs ────────────────────────────────────────────────────
 tab_overview, tab_detect, tab_clean, tab_export = st.tabs([
-    "📈 Raw Data", "🔍 Detection", "✨ Before vs After", "📦 Export"
+    "📈 Dados Brutos", "🔍 Detecção", "✨ Antes vs Depois", "📦 Exportar"
 ])
 
 # ── Run detection & cleaning (shared across tabs) ──────────
@@ -376,9 +378,9 @@ df_clean = clean_series(
 with tab_overview:
     st.markdown("""
     <div class="context-box">
-        This is the raw sensor data as received. Notice the <strong>spikes</strong> (sudden jumps),
-        <strong>gaps</strong> (missing segments), and the gradual <strong>drift</strong> in the temperature
-        channel around data point 600. These are common issues in real sensor deployments.
+        Estes são os dados brutos do sensor, como recebidos. Repare nos <strong>picos</strong> (saltos bruscos),
+        <strong>falhas</strong> (trechos sem dados) e a <strong>deriva</strong> gradual no canal de temperatura
+        por volta do ponto 600. Esses são problemas comuns em sensores reais em campo.
     </div>
     """, unsafe_allow_html=True)
 
@@ -429,11 +431,11 @@ with tab_overview:
 with tab_detect:
     st.markdown("""
     <div class="context-box">
-        The tool scans every data point using statistical methods. <strong>Missing values</strong> (NaN) are
-        identified directly. <strong>Outliers</strong> are flagged when a reading deviates too far from the
-        norm (configurable via the sidebar). <strong>Drift</strong> detects when a sensor gradually shifts
-        away from its expected baseline. The colored markers on the charts below show exactly where each
-        issue was found.
+        A ferramenta analisa cada ponto usando métodos estatísticos. <strong>Valores faltantes</strong> (NaN) são
+        identificados diretamente. <strong>Outliers</strong> são sinalizados quando uma leitura desvia demais
+        da norma (configurável na barra lateral). <strong>Deriva</strong> detecta quando o sensor gradualmente
+        se afasta da sua linha de base esperada. Os marcadores coloridos nos gráficos abaixo mostram exatamente
+        onde cada problema foi encontrado.
     </div>
     """, unsafe_allow_html=True)
 
@@ -441,7 +443,7 @@ with tab_detect:
         st.markdown("""
         <div style="text-align:center; padding:2rem; color:#059669">
             <p style="font-size:2rem; margin-bottom:0.3rem">✓</p>
-            <p style="font-weight:600; font-size:1.1rem">No issues detected</p>
+            <p style="font-weight:600; font-size:1.1rem">Nenhum problema detectado</p>
         </div>
         """, unsafe_allow_html=True)
     else:
@@ -461,11 +463,11 @@ with tab_detect:
         st.markdown(f"""
         <div class="metric-row">
             <div class="metric-card" style="flex:0 0 auto">
-                <div class="label">Total issues found</div>
+                <div class="label">Total de problemas</div>
                 <div class="value danger">{len(issues)}</div>
             </div>
             <div class="metric-card" style="flex:3; text-align:left">
-                <div class="label">Breakdown by type</div>
+                <div class="label">Detalhamento por tipo</div>
                 <div style="margin-top:0.3rem">{badges_html}</div>
             </div>
         </div>
@@ -525,17 +527,17 @@ with tab_detect:
             ann["xanchor"] = "left"
         st.plotly_chart(fig_issues, use_container_width=True)
 
-        with st.expander("View all issues as table"):
+        with st.expander("Ver todos os problemas em tabela"):
             st.dataframe(issues, use_container_width=True, height=400)
 
 # ── TAB 3: Before vs After ────────────────────────────────
 with tab_clean:
     st.markdown("""
     <div class="context-box">
-        Gray = original data with problems. Blue = cleaned data. The spikes are gone (replaced by
-        the local average), the gaps are filled (linear interpolation), and the signal is now ready
-        for analysis or reporting. You can adjust the cleaning sensitivity in the sidebar and see the
-        results update in real time.
+        Cinza = dados originais com problemas. Azul = dados limpos. Os picos foram removidos (substituídos
+        pela média local), as falhas foram preenchidas (interpolação linear) e o sinal está pronto
+        para análise ou relatório. Você pode ajustar a sensibilidade da limpeza na barra lateral e ver
+        os resultados atualizarem em tempo real.
     </div>
     """, unsafe_allow_html=True)
 
@@ -543,11 +545,11 @@ with tab_clean:
     <div class="legend-row">
         <div class="legend-item">
             <div class="legend-line" style="background:#CBD5E1"></div>
-            <span>Raw data (with problems)</span>
+            <span>Dados brutos (com problemas)</span>
         </div>
         <div class="legend-item">
             <div class="legend-line" style="background:#0369A1"></div>
-            <span>Cleaned data</span>
+            <span>Dados limpos</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -564,7 +566,7 @@ with tab_clean:
                 mode="lines", name="Raw" if i == 0 else None,
                 line=dict(color="#CBD5E1", width=1.5),
                 showlegend=(i == 0),
-                hovertemplate="Raw: %{y:.3f}<extra></extra>",
+                hovertemplate="Bruto: %{y:.3f}<extra></extra>",
             ),
             row=i + 1, col=1,
         )
@@ -574,7 +576,7 @@ with tab_clean:
                 mode="lines", name="Cleaned" if i == 0 else None,
                 line=dict(color="#0369A1", width=1.8),
                 showlegend=(i == 0),
-                hovertemplate="Cleaned: %{y:.3f}<extra></extra>",
+                hovertemplate="Limpo: %{y:.3f}<extra></extra>",
             ),
             row=i + 1, col=1,
         )
@@ -594,7 +596,7 @@ with tab_clean:
     st.plotly_chart(fig_compare, use_container_width=True)
 
     # Cleaning summary
-    st.markdown("#### What changed")
+    st.markdown("#### O que mudou")
     summary_cols = st.columns(len(value_cols))
     for i, col in enumerate(value_cols):
         raw_nan = df[col].isna().sum()
@@ -607,9 +609,9 @@ with tab_clean:
             <div class="metric-card">
                 <div class="label">{col}</div>
                 <div style="margin-top:0.5rem">
-                    <div style="font-size:0.8rem; color:#64748B">Missing: {raw_nan} → {clean_nan}</div>
-                    <div style="font-size:1.3rem; font-weight:700; color:#059669">{recovered} recovered</div>
-                    <div style="font-size:0.8rem; color:#64748B">{changed} points modified total</div>
+                    <div style="font-size:0.8rem; color:#64748B">Faltantes: {raw_nan} → {clean_nan}</div>
+                    <div style="font-size:1.3rem; font-weight:700; color:#059669">{recovered} recuperados</div>
+                    <div style="font-size:0.8rem; color:#64748B">{changed} pontos modificados no total</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -618,9 +620,9 @@ with tab_clean:
 with tab_export:
     st.markdown("""
     <div class="context-box">
-        Download the cleaned dataset as CSV (ready for analysis in Excel, Python, R, or any BI tool)
-        and/or the QC report that documents every correction made, with the parameters used.
-        The report provides full traceability of what was changed and why.
+        Baixe o dataset limpo em CSV (pronto para análise no Excel, Python, R ou qualquer ferramenta de BI)
+        e/ou o relatório de QC que documenta cada correção feita, com os parâmetros utilizados.
+        O relatório garante rastreabilidade completa do que foi alterado e por quê.
     </div>
     """, unsafe_allow_html=True)
 
@@ -629,15 +631,15 @@ with tab_export:
     with col_csv:
         st.markdown("""
         <div class="metric-card" style="margin-bottom:1rem">
-            <div class="label">Cleaned Dataset</div>
+            <div class="label">Dataset Limpo</div>
             <div style="font-size:0.9rem; color:#64748B; margin-top:0.3rem">
-                CSV with all corrections applied, ready for analysis
+                CSV com todas as correções aplicadas, pronto para análise
             </div>
         </div>
         """, unsafe_allow_html=True)
         csv_data = df_clean.to_csv(index=False)
         st.download_button(
-            label="Download cleaned CSV",
+            label="Baixar CSV limpo",
             data=csv_data,
             file_name="cleaned_sensor_data.csv",
             mime="text/csv",
@@ -647,38 +649,38 @@ with tab_export:
     with col_report:
         st.markdown("""
         <div class="metric-card" style="margin-bottom:1rem">
-            <div class="label">QC Report</div>
+            <div class="label">Relatório de QC</div>
             <div style="font-size:0.9rem; color:#64748B; margin-top:0.3rem">
-                Full traceability: what was found, what was changed, parameters used
+                Rastreabilidade completa: o que foi encontrado, o que foi alterado, parâmetros usados
             </div>
         </div>
         """, unsafe_allow_html=True)
         params = {
-            "Outlier method": outlier_method,
-            "Z-Score threshold": zscore_threshold,
-            "IQR factor": iqr_factor,
-            "Outlier action": outlier_action,
-            "Rolling window": rolling_window,
-            "Interpolation max gap": interpolate_max_gap,
-            "Drift detection window": drift_window,
-            "Drift threshold": drift_threshold,
+            "Método de outlier": outlier_method_label,
+            "Limiar Z-Score": zscore_threshold,
+            "Fator IQR": iqr_factor,
+            "Tratamento de outliers": outlier_action_label,
+            "Janela da média móvel": rolling_window,
+            "Gap máximo para interpolar": interpolate_max_gap,
+            "Janela de detecção de deriva": drift_window,
+            "Limiar de deriva": drift_threshold,
         }
         report_text = generate_report(df, df_clean, issues, timestamp_col, value_cols, params)
         st.download_button(
-            label="Download QC report",
+            label="Baixar relatório de QC",
             data=report_text,
             file_name="qc_report.txt",
             mime="text/plain",
             use_container_width=True,
         )
 
-    with st.expander("Preview report"):
+    with st.expander("Visualizar relatório"):
         st.code(report_text, language=None)
 
 # ── Footer ──────────────────────────────────────────────────
 st.markdown("""
 <div class="app-footer">
-    Built by <a href="https://github.com/Furiatii">Gabriel Furiati</a> ·
+    Feito por <a href="https://github.com/Furiatii">Gabriel Furiati</a> ·
     <a href="https://gabrielfuriati.me">Portfolio</a>
 </div>
 """, unsafe_allow_html=True)
